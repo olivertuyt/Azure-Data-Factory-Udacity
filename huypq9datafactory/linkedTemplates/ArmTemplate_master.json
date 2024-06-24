@@ -1,0 +1,97 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "huypq9datafactory"
+		},
+		"AzureSqlDatabaseLinked_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabaseLinked'"
+		},
+		"adlsnycpayrollhuyphamlinked_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'adlsnycpayrollhuyphamlinked'"
+		},
+		"huypq9accountlinked_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'huypq9accountlinked'"
+		},
+		"adlsnycpayrollhuyphamlinked_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsnycpayrollhuypham.dfs.core.windows.net/"
+		},
+		"huypq9accountlinked_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://huypq9account.dfs.core.windows.net/"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "huypq9datafactory_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureSqlDatabaseLinked_connectionString": {
+						"value": "[parameters('AzureSqlDatabaseLinked_connectionString')]"
+					},
+					"adlsnycpayrollhuyphamlinked_accountKey": {
+						"value": "[parameters('adlsnycpayrollhuyphamlinked_accountKey')]"
+					},
+					"huypq9accountlinked_accountKey": {
+						"value": "[parameters('huypq9accountlinked_accountKey')]"
+					},
+					"adlsnycpayrollhuyphamlinked_properties_typeProperties_url": {
+						"value": "[parameters('adlsnycpayrollhuyphamlinked_properties_typeProperties_url')]"
+					},
+					"huypq9accountlinked_properties_typeProperties_url": {
+						"value": "[parameters('huypq9accountlinked_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "huypq9datafactory_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'huypq9datafactory_ArmTemplate_0')]"
+			]
+		}
+	]
+}
